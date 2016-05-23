@@ -1,0 +1,29 @@
+version: '2'
+networks:
+    drone-pipe:
+        external: false
+services:
+    drone:  
+        image: drone/drone:latest
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        restart: always
+        environment:
+            - REMOTE_DRIVER=github
+            - REMOTE_CONFIG=https://github.com?client_id=<insert here>&client_secret=<insert here>&private_mode=false&orgs=org1&orgs=org2
+            - DATABASE_DRIVER=postgres
+            - DATABASE_CONFIG=postgres://drone:somepass@postgres:5432/drone?sslmode=disable
+        ports:
+            - '80:8000'
+        networks:
+            - drone-pipe
+
+    postgres:
+        image: postgres
+        restart: always
+        environment:
+            - POSTGRES_USER=drone
+            - POSTGRES_PASSWORD=somepass
+            - POSTGRES_DB=drone
+        networks:
+            - drone-pipe
