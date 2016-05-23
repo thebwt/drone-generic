@@ -5,8 +5,6 @@ networks:
 services:
     drone:  
         image: drone/drone:latest
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock
         restart: always
         environment:
             - REMOTE_DRIVER=github
